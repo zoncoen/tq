@@ -63,3 +63,5 @@ _testmain.go
 *.test
 *.prof
 
+# tool yacc
+*.output
