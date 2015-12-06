@@ -5,11 +5,13 @@ import __yyfmt__ "fmt"
 
 //line parser/parser.go.y:2
 import (
+	"io"
+
 	"github.com/zoncoen/tq/ast"
 	"github.com/zoncoen/tq/token"
 )
 
-//line parser/parser.go.y:10
+//line parser/parser.go.y:12
 type yySymType struct {
 	yys   int
 	token token.Token
@@ -34,7 +36,14 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line parser/parser.go.y:45
+//line parser/parser.go.y:47
+
+func Parse(r io.Reader) ast.Filter {
+	l := new(Lexer)
+	l.Init(r)
+	yyParse(l)
+	return l.result
+}
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -433,26 +442,26 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:26
+		//line parser/parser.go.y:28
 		{
 			yyVAL.expr = yyDollar[1].expr
 			yylex.(*Lexer).result = yyVAL.expr
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:33
+		//line parser/parser.go.y:35
 		{
 			yyVAL.expr = ast.EmptyFilter{}
 		}
 	case 3:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:37
+		//line parser/parser.go.y:39
 		{
 			yyVAL.expr = ast.KeyFilter{Key: yyDollar[2].token.Literal}
 		}
 	case 4:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.go.y:41
+		//line parser/parser.go.y:43
 		{
 			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
 		}

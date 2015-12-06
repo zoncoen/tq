@@ -2,6 +2,8 @@
 package parser
 
 import (
+    "io"
+
     "github.com/zoncoen/tq/ast"
     "github.com/zoncoen/tq/token"
 )
@@ -43,3 +45,10 @@ filter
     }
 
 %%
+
+func Parse(r io.Reader) ast.Filter {
+    l := new(Lexer)
+    l.Init(r)
+    yyParse(l)
+    return l.result
+}

@@ -20,14 +20,12 @@ var parseTests = []struct {
 		Right: ast.EmptyFilter{}}},
 }
 
-func TestYyParse(t *testing.T) {
+func TestParse(t *testing.T) {
 	for i, test := range parseTests {
 		r := strings.NewReader(test.text)
-		l := new(Lexer)
-		l.Init(r)
-		yyParse(l)
-		if l.result != test.ast {
-			t.Errorf("case %d: got %#v; expected %#v", i, l.result, test.ast)
+		res := Parse(r)
+		if res != test.ast {
+			t.Errorf("case %d: got %#v; expected %#v", i, res, test.ast)
 		}
 	}
 }
