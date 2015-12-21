@@ -13,6 +13,10 @@ type KeyFilter struct {
 	Key string
 }
 
+type IndexFilter struct {
+	Index string
+}
+
 type BinaryOp struct {
 	Left  Filter
 	Op    token.Token

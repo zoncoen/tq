@@ -17,7 +17,7 @@ import (
 %type <expr> program
 %type <expr> filter
 
-%token <token> PERIOD STRING PIPE
+%token <token> PERIOD STRING INT PIPE LBRACK RBRACK
 
 %left PIPE
 
@@ -38,6 +38,10 @@ filter
     | PERIOD STRING
     {
         $$ = ast.KeyFilter{Key: $2.Literal}
+    }
+    | PERIOD LBRACK INT RBRACK
+    {
+        $$ = ast.IndexFilter{Index: $3.Literal}
     }
     | filter PIPE filter
     {

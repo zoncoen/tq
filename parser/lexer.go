@@ -20,11 +20,20 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	if tok == scanner.String {
 		tok = STRING
 	}
+	if tok == scanner.Int {
+		tok = INT
+	}
 	if tok == int('.') {
 		tok = PERIOD
 	}
 	if tok == int('|') {
 		tok = PIPE
+	}
+	if tok == int('[') {
+		tok = LBRACK
+	}
+	if tok == int(']') {
+		tok = RBRACK
 	}
 	lval.token = token.Token{Token: tok, Literal: l.TokenText()}
 	return tok

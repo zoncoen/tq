@@ -2,6 +2,7 @@ package transformer
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/zoncoen/tq/ast"
 )
@@ -20,6 +21,9 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 	case ast.KeyFilter:
 		kf, _ := f.(ast.KeyFilter)
 		res, err = FilterByKey(i, kf)
+	case ast.IndexFilter:
+		inf, _ := f.(ast.IndexFilter)
+		res, err = FilterByIndex(i, inf)
 	case ast.BinaryOp:
 		bo, _ := f.(ast.BinaryOp)
 		switch bo.Op.Literal {
@@ -37,11 +41,26 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 func FilterByKey(i interface{}, f ast.KeyFilter) (interface{}, error) {
 	m, ok := i.(map[string]interface{})
 	if !ok {
-		return nil, errors.New("parse error: Objects must consist of key:value pairs")
+		return nil, errors.New("transform error: Objects must consist of key:value pairs")
 	}
 	v, ok := m[f.Key]
 	if !ok {
 		return nil, nil
 	}
 	return v, nil
+}
+
+func FilterByIndex(i interface{}, f ast.IndexFilter) (interface{}, error) {
+	a, ok := i.([]map[string]interface{})
+	if !ok {
+		return nil, errors.New("transform error: Objects must consist of array")
+	}
+	index, err := strconv.Atoi(f.Index)
+	if err != nil {
+		return nil, err
+	}
+	if index >= len(a) {
+		return nil, nil
+	}
+	return a[index], nil
 }

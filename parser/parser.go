@@ -20,7 +20,10 @@ type yySymType struct {
 
 const PERIOD = 57346
 const STRING = 57347
-const PIPE = 57348
+const INT = 57348
+const PIPE = 57349
+const LBRACK = 57350
+const RBRACK = 57351
 
 var yyToknames = [...]string{
 	"$end",
@@ -28,7 +31,10 @@ var yyToknames = [...]string{
 	"$unk",
 	"PERIOD",
 	"STRING",
+	"INT",
 	"PIPE",
+	"LBRACK",
+	"RBRACK",
 }
 var yyStatenames = [...]string{}
 
@@ -36,7 +42,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line parser/parser.go.y:47
+//line parser/parser.go.y:51
 
 func Parse(r io.Reader) ast.Filter {
 	l := new(Lexer)
@@ -52,41 +58,42 @@ var yyExca = [...]int{
 	-2, 0,
 }
 
-const yyNprod = 5
+const yyNprod = 6
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 8
+const yyLast = 11
 
 var yyAct = [...]int{
 
-	4, 5, 2, 3, 1, 0, 0, 6,
+	9, 5, 4, 8, 6, 2, 3, 1, 0, 0,
+	7,
 }
 var yyPact = [...]int{
 
-	-1, -1000, -6, -4, -1, -1000, -1000,
+	2, -1000, -5, -4, 2, -1000, -3, -1000, -9, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 4, 2,
+	0, 7, 5,
 }
 var yyR1 = [...]int{
 
-	0, 1, 2, 2, 2,
+	0, 1, 2, 2, 2, 2,
 }
 var yyR2 = [...]int{
 
-	0, 1, 1, 2, 3,
+	0, 1, 1, 2, 4, 3,
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, 4, 6, 5, -2,
+	-1000, -1, -2, 4, 7, 5, 8, -2, 6, 9,
 }
 var yyDef = [...]int{
 
-	0, -2, 1, 2, 0, 3, 4,
+	0, -2, 1, 2, 0, 3, 0, 5, 0, 4,
 }
 var yyTok1 = [...]int{
 
@@ -94,7 +101,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5, 6,
+	2, 3, 4, 5, 6, 7, 8, 9,
 }
 var yyTok3 = [...]int{
 	0,
@@ -460,8 +467,14 @@ yydefault:
 			yyVAL.expr = ast.KeyFilter{Key: yyDollar[2].token.Literal}
 		}
 	case 4:
-		yyDollar = yyS[yypt-3 : yypt+1]
+		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.go.y:43
+		{
+			yyVAL.expr = ast.IndexFilter{Index: yyDollar[3].token.Literal}
+		}
+	case 5:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line parser/parser.go.y:47
 		{
 			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
 		}
