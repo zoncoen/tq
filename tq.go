@@ -49,17 +49,20 @@ func main() {
 		}
 	}
 
-	switch t.(type) {
-	case int64:
-		fmt.Printf("%d\n", t)
-	case string:
-		fmt.Printf("\"%s\"\n", t)
-	default:
-		e := toml.NewEncoder(os.Stdout)
-		err = e.Encode(t)
-		if err != nil {
-			log.Fatalf("%s", err)
+	if t == nil {
+		fmt.Print("\n")
+	} else {
+		switch t.(type) {
+		case int64:
+			fmt.Printf("%d\n", t)
+		case string:
+			fmt.Printf("\"%s\"\n", t)
+		default:
+			e := toml.NewEncoder(os.Stdout)
+			err = e.Encode(t)
+			if err != nil {
+				log.Fatalf("%s", err)
+			}
 		}
 	}
-
 }

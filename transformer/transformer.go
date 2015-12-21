@@ -11,6 +11,9 @@ func Transform(i interface{}, f ast.Filter) (interface{}, error) {
 }
 
 func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
+	if i == nil {
+		return nil, nil
+	}
 	switch f.(type) {
 	case ast.EmptyFilter:
 		res = i
@@ -36,5 +39,9 @@ func FilterByKey(i interface{}, f ast.KeyFilter) (interface{}, error) {
 	if !ok {
 		return nil, errors.New("parse error: Objects must consist of key:value pairs")
 	}
-	return m[f.Key], nil
+	v, ok := m[f.Key]
+	if !ok {
+		return nil, nil
+	}
+	return v, nil
 }
