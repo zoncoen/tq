@@ -36,6 +36,10 @@ var parseTests = []struct {
 			Right: ast.KeyFilter{Key: "second"}},
 		Op:    token.Token{Token: PIPE, Literal: "|"},
 		Right: ast.KeyFilter{Key: "third"}}},
+	{".first, .second", ast.BinaryOp{
+		Left:  ast.KeyFilter{Key: "first"},
+		Op:    token.Token{Token: COMMA, Literal: ","},
+		Right: ast.KeyFilter{Key: "second"}}},
 }
 
 func TestParse(t *testing.T) {

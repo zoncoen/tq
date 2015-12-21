@@ -25,6 +25,7 @@ const PIPE = 57349
 const LBRACK = 57350
 const RBRACK = 57351
 const COLON = 57352
+const COMMA = 57353
 
 var yyToknames = [...]string{
 	"$end",
@@ -37,6 +38,7 @@ var yyToknames = [...]string{
 	"LBRACK",
 	"RBRACK",
 	"COLON",
+	"COMMA",
 }
 var yyStatenames = [...]string{}
 
@@ -44,7 +46,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line parser/parser.go.y:102
+//line parser/parser.go.y:106
 
 func Parse(r io.Reader) ast.Filter {
 	l := new(Lexer)
@@ -60,51 +62,51 @@ var yyExca = [...]int{
 	-2, 0,
 }
 
-const yyNprod = 16
+const yyNprod = 17
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 26
+const yyLast = 29
 
 var yyAct = [...]int{
 
-	14, 15, 19, 20, 17, 16, 22, 25, 24, 23,
-	18, 10, 2, 9, 11, 13, 8, 21, 9, 3,
-	7, 12, 6, 5, 4, 1,
+	9, 2, 27, 8, 16, 17, 9, 10, 19, 18,
+	13, 14, 15, 10, 21, 22, 24, 26, 20, 25,
+	11, 3, 23, 12, 7, 6, 5, 4, 1,
 }
 var yyPact = [...]int{
 
-	15, -1000, 9, 6, -1000, -1000, -1000, -1000, 15, 10,
-	-1000, -5, 14, -1000, 1, -7, 11, -1000, -1000, -1000,
-	0, -1, -2, -1000, -1000, -1000,
+	17, -1000, -4, 15, -1000, -1000, -1000, -1000, 17, 6,
+	17, -1000, -1, 2, -1000, -4, 9, 5, 16, -1000,
+	-1000, -1000, 10, 8, -7, -1000, -1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 25, 12, 24, 23, 22, 20,
+	0, 28, 1, 27, 26, 25, 24,
 }
 var yyR1 = [...]int{
 
 	0, 1, 2, 2, 2, 2, 2, 3, 3, 4,
-	5, 5, 5, 5, 6, 6,
+	5, 5, 5, 5, 6, 6, 6,
 }
 var yyR2 = [...]int{
 
 	0, 1, 1, 1, 1, 1, 1, 2, 4, 4,
-	6, 5, 5, 3, 3, 3,
+	6, 5, 5, 3, 3, 3, 3,
 }
 var yyChk = [...]int{
 
 	-1000, -1, -2, 4, -3, -4, -5, -6, 7, 4,
-	5, 8, -2, 5, 5, 6, 10, 9, 9, 9,
-	10, 6, 6, 9, 9, 9,
+	11, 5, 8, -2, 5, -2, 5, 6, 10, 9,
+	9, 9, 10, 6, 6, 9, 9, 9,
 }
 var yyDef = [...]int{
 
 	0, -2, 1, 2, 3, 4, 5, 6, 0, 0,
-	7, 0, 14, 15, 0, 0, 0, 13, 8, 9,
-	0, 0, 0, 11, 12, 10,
+	0, 7, 0, 14, 15, 16, 0, 0, 0, 13,
+	8, 9, 0, 0, 0, 11, 12, 10,
 }
 var yyTok1 = [...]int{
 
@@ -112,7 +114,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5, 6, 7, 8, 9, 10,
+	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 }
 var yyTok3 = [...]int{
 	0,
@@ -548,6 +550,12 @@ yydefault:
 		//line parser/parser.go.y:99
 		{
 			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: token.Token{Token: PIPE, Literal: "|"}, Right: ast.KeyFilter{Key: yyDollar[3].token.Literal}}
+		}
+	case 16:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line parser/parser.go.y:103
+		{
+			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
 		}
 	}
 	goto yystack /* stack new state and value */

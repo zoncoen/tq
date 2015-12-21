@@ -29,14 +29,7 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 		res, err = FilterByRange(i, rf)
 	case ast.BinaryOp:
 		bo, _ := f.(ast.BinaryOp)
-		switch bo.Op.Literal {
-		case "|":
-			res, err = Filter(i, bo.Left)
-			if err != nil {
-				return res, err
-			}
-			res, err = Filter(res, bo.Right)
-		}
+		res, err = ExecuteBinaryOp(i, bo)
 	}
 	return res, err
 }
@@ -100,4 +93,26 @@ func FilterByRange(i interface{}, f ast.RangeFilter) (interface{}, error) {
 	}
 
 	return a[l:h], nil
+}
+
+func ExecuteBinaryOp(i interface{}, bo ast.BinaryOp) (res interface{}, err error) {
+	switch bo.Op.Literal {
+	case "|":
+		res, err = Filter(i, bo.Left)
+		if err != nil {
+			return res, err
+		}
+		res, err = Filter(res, bo.Right)
+	case ",":
+		lRes, err := Filter(i, bo.Left)
+		if err != nil {
+			return res, err
+		}
+		rRes, err := Filter(i, bo.Right)
+		if err != nil {
+			return res, err
+		}
+		res = []interface{}{lRes, rRes}
+	}
+	return res, err
 }

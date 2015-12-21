@@ -21,7 +21,7 @@ import (
 %type <expr> range_filter
 %type <expr> binary_op
 
-%token <token> PERIOD STRING INT PIPE LBRACK RBRACK COLON
+%token <token> PERIOD STRING INT PIPE LBRACK RBRACK COLON COMMA
 
 %left PIPE
 
@@ -98,6 +98,10 @@ binary_op
     | filter PERIOD STRING
     {
         $$ = ast.BinaryOp{Left: $1, Op: token.Token{Token: PIPE, Literal: "|"}, Right: ast.KeyFilter{Key: $3.Literal}}
+    }
+    | filter COMMA filter
+    {
+        $$ = ast.BinaryOp{Left: $1, Op: $2, Right: $3}
     }
 %%
 

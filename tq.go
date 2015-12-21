@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -22,6 +23,52 @@ var opt option
 func init() {
 	flag.BoolVar(&opt.help, "h", false, "print help message")
 	flag.BoolVar(&opt.help, "help", false, "print help message")
+}
+
+func write(w io.Writer, t interface{}) error {
+	if t == nil {
+		_, err := fmt.Fprint(w, "\n")
+		if err != nil {
+			return err
+		}
+	} else {
+		switch t.(type) {
+		case int64:
+			_, err := fmt.Fprintf(w, "%d\n", t)
+			if err != nil {
+				return err
+			}
+		case string:
+			_, err := fmt.Fprintf(w, "\"%s\"\n", t)
+			if err != nil {
+				return err
+			}
+		case []map[string]interface{}:
+			e := toml.NewEncoder(w)
+			s, _ := t.([]map[string]interface{})
+			for _, v := range s {
+				err := e.Encode(v)
+				if err != nil {
+					return err
+				}
+			}
+		case []interface{}:
+			s, _ := t.([]interface{})
+			for _, v := range s {
+				err := write(w, v)
+				if err != nil {
+					return err
+				}
+			}
+		default:
+			e := toml.NewEncoder(os.Stdout)
+			err := e.Encode(t)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func main() {
@@ -49,29 +96,8 @@ func main() {
 		}
 	}
 
-	if t == nil {
-		fmt.Print("\n")
-	} else {
-		switch t.(type) {
-		case int64:
-			fmt.Printf("%d\n", t)
-		case string:
-			fmt.Printf("\"%s\"\n", t)
-		case []map[string]interface{}:
-			e := toml.NewEncoder(os.Stdout)
-			a, _ := t.([]map[string]interface{})
-			for _, v := range a {
-				err = e.Encode(v)
-				if err != nil {
-					log.Fatalf("%s", err)
-				}
-			}
-		default:
-			e := toml.NewEncoder(os.Stdout)
-			err = e.Encode(t)
-			if err != nil {
-				log.Fatalf("%s", err)
-			}
-		}
+	err = write(os.Stdout, t)
+	if err != nil {
+		log.Fatalf("%s", err)
 	}
 }

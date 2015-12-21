@@ -41,6 +41,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	if tok == int(':') {
 		tok = COLON
 	}
+	if tok == int(',') {
+		tok = COMMA
+	}
 	lval.token = token.Token{Token: tok, Literal: lit}
 	return tok
 }
