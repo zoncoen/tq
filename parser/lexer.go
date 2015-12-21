@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"strconv"
 	"text/scanner"
 
 	"github.com/zoncoen/tq/ast"
@@ -14,11 +15,13 @@ type Lexer struct {
 
 func (l *Lexer) Lex(lval *yySymType) int {
 	tok := int(l.Scan())
+	lit := l.TokenText()
 	if tok == scanner.Ident {
 		tok = STRING
 	}
 	if tok == scanner.String {
 		tok = STRING
+		lit, _ = strconv.Unquote(lit)
 	}
 	if tok == scanner.Int {
 		tok = INT
@@ -35,7 +38,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	if tok == int(']') {
 		tok = RBRACK
 	}
-	lval.token = token.Token{Token: tok, Literal: l.TokenText()}
+	lval.token = token.Token{Token: tok, Literal: lit}
 	return tok
 }
 

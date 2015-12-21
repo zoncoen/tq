@@ -16,6 +16,8 @@ import (
 
 %type <expr> program
 %type <expr> filter
+%type <expr> key_filter
+%type <expr> index_filter
 
 %token <token> PERIOD STRING INT PIPE LBRACK RBRACK
 
@@ -35,19 +37,34 @@ filter
     {
         $$ = ast.EmptyFilter{}
     }
-    | PERIOD STRING
+    | key_filter
     {
-        $$ = ast.KeyFilter{Key: $2.Literal}
+        $$ = $1
     }
-    | PERIOD LBRACK INT RBRACK
+    | index_filter
     {
-        $$ = ast.IndexFilter{Index: $3.Literal}
+        $$ = $1
     }
     | filter PIPE filter
     {
         $$ = ast.BinaryOp{Left: $1, Op: $2, Right: $3}
     }
 
+key_filter
+    : PERIOD STRING
+    {
+        $$ = ast.KeyFilter{Key: $2.Literal}
+    }
+    | PERIOD LBRACK STRING RBRACK
+    {
+        $$ = ast.KeyFilter{Key: $3.Literal}
+    }
+
+index_filter
+    : PERIOD LBRACK INT RBRACK
+    {
+        $$ = ast.IndexFilter{Index: $3.Literal}
+    }
 %%
 
 func Parse(r io.Reader) ast.Filter {
