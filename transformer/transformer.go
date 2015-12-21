@@ -24,6 +24,9 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 	case ast.IndexFilter:
 		inf, _ := f.(ast.IndexFilter)
 		res, err = FilterByIndex(i, inf)
+	case ast.RangeFilter:
+		rf, _ := f.(ast.RangeFilter)
+		res, err = FilterByRange(i, rf)
 	case ast.BinaryOp:
 		bo, _ := f.(ast.BinaryOp)
 		switch bo.Op.Literal {
@@ -41,7 +44,7 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 func FilterByKey(i interface{}, f ast.KeyFilter) (interface{}, error) {
 	m, ok := i.(map[string]interface{})
 	if !ok {
-		return nil, errors.New("transform error: Objects must consist of key:value pairs")
+		return nil, errors.New("transform error: Object must consist of key:value pairs")
 	}
 	v, ok := m[f.Key]
 	if !ok {
@@ -53,7 +56,7 @@ func FilterByKey(i interface{}, f ast.KeyFilter) (interface{}, error) {
 func FilterByIndex(i interface{}, f ast.IndexFilter) (interface{}, error) {
 	a, ok := i.([]map[string]interface{})
 	if !ok {
-		return nil, errors.New("transform error: Objects must consist of array")
+		return nil, errors.New("transform error: Object must consist of array")
 	}
 	index, err := strconv.Atoi(f.Index)
 	if err != nil {
@@ -63,4 +66,38 @@ func FilterByIndex(i interface{}, f ast.IndexFilter) (interface{}, error) {
 		return nil, nil
 	}
 	return a[index], nil
+}
+
+func FilterByRange(i interface{}, f ast.RangeFilter) (interface{}, error) {
+	a, ok := i.([]map[string]interface{})
+	if !ok {
+		return nil, errors.New("transform error: Object must consist of array")
+	}
+
+	l := 0
+	h := len(a) + 1
+	if f.Low != "" {
+		n, err := strconv.Atoi(f.Low)
+		if err != nil {
+			return nil, err
+		}
+		if n > l {
+			l = n
+		}
+	}
+	if f.High != "" {
+		n, err := strconv.Atoi(f.High)
+		if err != nil {
+			return nil, err
+		}
+		if n < h {
+			h = n
+		}
+	}
+
+	if l > h {
+		return []map[string]interface{}{}, nil
+	}
+
+	return a[l:h], nil
 }

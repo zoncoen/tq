@@ -38,6 +38,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	if tok == int(']') {
 		tok = RBRACK
 	}
+	if tok == int(':') {
+		tok = COLON
+	}
 	lval.token = token.Token{Token: tok, Literal: lit}
 	return tok
 }

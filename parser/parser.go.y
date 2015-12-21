@@ -18,8 +18,9 @@ import (
 %type <expr> filter
 %type <expr> key_filter
 %type <expr> index_filter
+%type <expr> range_filter
 
-%token <token> PERIOD STRING INT PIPE LBRACK RBRACK
+%token <token> PERIOD STRING INT PIPE LBRACK RBRACK COLON
 
 %left PIPE
 
@@ -45,6 +46,10 @@ filter
     {
         $$ = $1
     }
+    | range_filter
+    {
+        $$ = $1
+    }
     | filter PIPE filter
     {
         $$ = ast.BinaryOp{Left: $1, Op: $2, Right: $3}
@@ -64,6 +69,24 @@ index_filter
     : PERIOD LBRACK INT RBRACK
     {
         $$ = ast.IndexFilter{Index: $3.Literal}
+    }
+
+range_filter
+    : PERIOD LBRACK INT COLON INT RBRACK
+    {
+        $$ = ast.RangeFilter{Low: $3.Literal, High: $5.Literal}
+    }
+    | PERIOD LBRACK INT COLON RBRACK
+    {
+        $$ = ast.RangeFilter{Low: $3.Literal, High: ""}
+    }
+    | PERIOD LBRACK COLON INT RBRACK
+    {
+        $$ = ast.RangeFilter{Low: "", High: $4.Literal}
+    }
+    | PERIOD LBRACK RBRACK
+    {
+        $$ = ast.RangeFilter{Low: "", High: ""}
     }
 %%
 

@@ -17,6 +17,10 @@ var parseTests = []struct {
 	{".\"key\"", ast.KeyFilter{Key: "key"}},
 	{".[\"key\"]", ast.KeyFilter{Key: "key"}},
 	{".[0]", ast.IndexFilter{Index: "0"}},
+	{".[0:1]", ast.RangeFilter{Low: "0", High: "1"}},
+	{".[0:]", ast.RangeFilter{Low: "0", High: ""}},
+	{".[:1]", ast.RangeFilter{Low: "", High: "1"}},
+	{".[]", ast.RangeFilter{Low: "", High: ""}},
 	{". | .", ast.BinaryOp{
 		Left:  ast.EmptyFilter{},
 		Op:    token.Token{Token: PIPE, Literal: "|"},

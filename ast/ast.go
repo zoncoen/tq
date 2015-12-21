@@ -17,6 +17,11 @@ type IndexFilter struct {
 	Index string
 }
 
+type RangeFilter struct {
+	Low  string
+	High string
+}
+
 type BinaryOp struct {
 	Left  Filter
 	Op    token.Token
