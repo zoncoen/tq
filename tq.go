@@ -57,6 +57,15 @@ func main() {
 			fmt.Printf("%d\n", t)
 		case string:
 			fmt.Printf("\"%s\"\n", t)
+		case []map[string]interface{}:
+			e := toml.NewEncoder(os.Stdout)
+			a, _ := t.([]map[string]interface{})
+			for _, v := range a {
+				err = e.Encode(v)
+				if err != nil {
+					log.Fatalf("%s", err)
+				}
+			}
 		default:
 			e := toml.NewEncoder(os.Stdout)
 			err = e.Encode(t)
