@@ -26,6 +26,7 @@ const LBRACK = 57350
 const RBRACK = 57351
 const COLON = 57352
 const COMMA = 57353
+const QUESTION = 57354
 
 var yyToknames = [...]string{
 	"$end",
@@ -39,6 +40,7 @@ var yyToknames = [...]string{
 	"RBRACK",
 	"COLON",
 	"COMMA",
+	"QUESTION",
 }
 var yyStatenames = [...]string{}
 
@@ -46,7 +48,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line parser/parser.go.y:106
+//line parser/parser.go.y:110
 
 func Parse(r io.Reader) ast.Filter {
 	l := new(Lexer)
@@ -62,51 +64,52 @@ var yyExca = [...]int{
 	-2, 0,
 }
 
-const yyNprod = 17
+const yyNprod = 18
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 29
+const yyLast = 31
 
 var yyAct = [...]int{
 
-	9, 2, 27, 8, 16, 17, 9, 10, 19, 18,
-	13, 14, 15, 10, 21, 22, 24, 26, 20, 25,
-	11, 3, 23, 12, 7, 6, 5, 4, 1,
+	10, 28, 10, 9, 22, 23, 27, 11, 8, 11,
+	8, 17, 18, 2, 25, 20, 19, 26, 21, 12,
+	3, 24, 13, 14, 15, 16, 7, 6, 5, 4,
+	1,
 }
 var yyPact = [...]int{
 
-	17, -1000, -4, 15, -1000, -1000, -1000, -1000, 17, 6,
-	17, -1000, -1, 2, -1000, -4, 9, 5, 16, -1000,
-	-1000, -1000, 10, 8, -7, -1000, -1000, -1000,
+	16, -1000, -4, 14, -1000, -1000, -1000, -1000, -1000, 16,
+	19, 16, -1000, 6, -2, -1000, -4, 9, -5, 15,
+	-1000, -1000, -1000, 8, -3, -8, -1000, -1000, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 28, 1, 27, 26, 25, 24,
+	0, 30, 13, 29, 28, 27, 26,
 }
 var yyR1 = [...]int{
 
-	0, 1, 2, 2, 2, 2, 2, 3, 3, 4,
-	5, 5, 5, 5, 6, 6, 6,
+	0, 1, 2, 2, 2, 2, 2, 2, 3, 3,
+	4, 5, 5, 5, 5, 6, 6, 6,
 }
 var yyR2 = [...]int{
 
-	0, 1, 1, 1, 1, 1, 1, 2, 4, 4,
-	6, 5, 5, 3, 3, 3, 3,
+	0, 1, 1, 1, 1, 1, 1, 2, 2, 4,
+	4, 6, 5, 5, 3, 3, 3, 3,
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, 4, -3, -4, -5, -6, 7, 4,
-	11, 5, 8, -2, 5, -2, 5, 6, 10, 9,
-	9, 9, 10, 6, 6, 9, 9, 9,
+	-1000, -1, -2, 4, -3, -4, -5, -6, 12, 7,
+	4, 11, 5, 8, -2, 5, -2, 5, 6, 10,
+	9, 9, 9, 10, 6, 6, 9, 9, 9,
 }
 var yyDef = [...]int{
 
-	0, -2, 1, 2, 3, 4, 5, 6, 0, 0,
-	0, 7, 0, 14, 15, 16, 0, 0, 0, 13,
-	8, 9, 0, 0, 0, 11, 12, 10,
+	0, -2, 1, 2, 3, 4, 5, 6, 7, 0,
+	0, 0, 8, 0, 15, 16, 17, 0, 0, 0,
+	14, 9, 10, 0, 0, 0, 12, 13, 11,
 }
 var yyTok1 = [...]int{
 
@@ -115,6 +118,7 @@ var yyTok1 = [...]int{
 var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	12,
 }
 var yyTok3 = [...]int{
 	0,
@@ -499,61 +503,67 @@ yydefault:
 		}
 	case 7:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:61
+		//line parser/parser.go.y:59
+		{
+			yyVAL.expr = ast.IgnoreErrorHandler{Filter: yyDollar[1].expr}
+		}
+	case 8:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line parser/parser.go.y:65
 		{
 			yyVAL.expr = ast.KeyFilter{Key: yyDollar[2].token.Literal}
 		}
-	case 8:
+	case 9:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.go.y:65
+		//line parser/parser.go.y:69
 		{
 			yyVAL.expr = ast.KeyFilter{Key: yyDollar[3].token.Literal}
 		}
-	case 9:
+	case 10:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.go.y:71
+		//line parser/parser.go.y:75
 		{
 			yyVAL.expr = ast.IndexFilter{Index: yyDollar[3].token.Literal}
 		}
-	case 10:
-		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.go.y:77
-		{
-			yyVAL.expr = ast.RangeFilter{Low: yyDollar[3].token.Literal, High: yyDollar[5].token.Literal}
-		}
 	case 11:
-		yyDollar = yyS[yypt-5 : yypt+1]
+		yyDollar = yyS[yypt-6 : yypt+1]
 		//line parser/parser.go.y:81
 		{
-			yyVAL.expr = ast.RangeFilter{Low: yyDollar[3].token.Literal, High: ""}
+			yyVAL.expr = ast.RangeFilter{Low: yyDollar[3].token.Literal, High: yyDollar[5].token.Literal}
 		}
 	case 12:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.go.y:85
 		{
-			yyVAL.expr = ast.RangeFilter{Low: "", High: yyDollar[4].token.Literal}
+			yyVAL.expr = ast.RangeFilter{Low: yyDollar[3].token.Literal, High: ""}
 		}
 	case 13:
-		yyDollar = yyS[yypt-3 : yypt+1]
+		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.go.y:89
 		{
-			yyVAL.expr = ast.RangeFilter{Low: "", High: ""}
+			yyVAL.expr = ast.RangeFilter{Low: "", High: yyDollar[4].token.Literal}
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.go.y:95
+		//line parser/parser.go.y:93
 		{
-			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
+			yyVAL.expr = ast.RangeFilter{Low: "", High: ""}
 		}
 	case 15:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.go.y:99
 		{
-			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: token.Token{Token: PIPE, Literal: "|"}, Right: ast.KeyFilter{Key: yyDollar[3].token.Literal}}
+			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
 		}
 	case 16:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.go.y:103
+		{
+			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: token.Token{Token: PIPE, Literal: "|"}, Right: ast.KeyFilter{Key: yyDollar[3].token.Literal}}
+		}
+	case 17:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line parser/parser.go.y:107
 		{
 			yyVAL.expr = ast.BinaryOp{Left: yyDollar[1].expr, Op: yyDollar[2].token, Right: yyDollar[3].expr}
 		}

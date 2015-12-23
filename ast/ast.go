@@ -27,3 +27,7 @@ type BinaryOp struct {
 	Op    token.Token
 	Right Filter
 }
+
+type IgnoreErrorHandler struct {
+	Filter Filter
+}

@@ -21,7 +21,7 @@ import (
 %type <expr> range_filter
 %type <expr> binary_op
 
-%token <token> PERIOD STRING INT PIPE LBRACK RBRACK COLON COMMA
+%token <token> PERIOD STRING INT PIPE LBRACK RBRACK COLON COMMA QUESTION
 
 %left PIPE
 
@@ -54,6 +54,10 @@ filter
     | binary_op
     {
         $$ = $1
+    }
+    | filter QUESTION
+    {
+        $$ = ast.IgnoreErrorHandler{Filter: $1}
     }
 
 key_filter

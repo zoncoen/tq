@@ -14,9 +14,11 @@ var parseTests = []struct {
 }{
 	{".", ast.EmptyFilter{}},
 	{".key", ast.KeyFilter{Key: "key"}},
+	{".key?", ast.IgnoreErrorHandler{Filter: ast.KeyFilter{Key: "key"}}},
 	{".\"key\"", ast.KeyFilter{Key: "key"}},
 	{".[\"key\"]", ast.KeyFilter{Key: "key"}},
 	{".[0]", ast.IndexFilter{Index: "0"}},
+	{".[0]?", ast.IgnoreErrorHandler{Filter: ast.IndexFilter{Index: "0"}}},
 	{".[0:1]", ast.RangeFilter{Low: "0", High: "1"}},
 	{".[0:]", ast.RangeFilter{Low: "0", High: ""}},
 	{".[:1]", ast.RangeFilter{Low: "", High: "1"}},

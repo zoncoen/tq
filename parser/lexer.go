@@ -44,6 +44,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	if tok == int(',') {
 		tok = COMMA
 	}
+	if tok == int('?') {
+		tok = QUESTION
+	}
 	lval.token = token.Token{Token: tok, Literal: lit}
 	return tok
 }
