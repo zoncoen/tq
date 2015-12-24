@@ -30,6 +30,12 @@ func Filter(i interface{}, f ast.Filter) (res interface{}, err error) {
 	case ast.BinaryOp:
 		bo, _ := f.(ast.BinaryOp)
 		res, err = ExecuteBinaryOp(i, bo)
+	case ast.IgnoreErrorHandler:
+		h, _ := f.(ast.IgnoreErrorHandler)
+		res, err = Filter(i, h.Filter)
+		if err != nil {
+			return []map[string]interface{}{}, nil
+		}
 	}
 	return res, err
 }
